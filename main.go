@@ -1,0 +1,105 @@
+package main
+
+import (
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log/slog"
+	"net/http"
+	"os"
+	"strings"
+	"time"
+
+	"github.com/himanhsugusain/spinnaker-audit-sink/config"
+	"github.com/himanhsugusain/spinnaker-audit-sink/sinks"
+	"github.com/himanhsugusain/spinnaker-audit-sink/spinnaker"
+)
+
+func main() {
+	app := NewApp()
+	panic(app.Run())
+}
+
+type App struct {
+	c     config.Config
+	log   *slog.Logger
+	mux   *http.ServeMux
+	sinks []sinks.Sink
+}
+
+func NewApp() *App {
+	mux := http.DefaultServeMux
+	return &App{
+		c: config.GetConfig(),
+		log: slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+			Level:     slog.LevelDebug,
+			AddSource: true,
+		})),
+		mux: mux,
+		sinks: []sinks.Sink{
+			&sinks.LogSink{},
+		},
+	}
+
+}
+
+func (a *App) Run() error {
+	a.mux.HandleFunc("/spinnakerAuditLogs/", a.spinnakerAuditLogs())
+	a.mux.HandleFunc("/", a.defaultHandlerFunc())
+	return http.ListenAndServe(fmt.Sprintf(":%s", a.c.Port), a.mux)
+}
+
+func (a *App) logRequest(r *http.Request, start time.Time) {
+	a.log.Debug("request", "method", r.Method, "path", r.URL.Path, "latency", time.Since(start), "remote", r.RemoteAddr, "user-agent", r.UserAgent())
+}
+
+func (a *App) defaultHandlerFunc() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		defer a.logRequest(r, start)
+		http.NotFoundHandler().ServeHTTP(w, r)
+	}
+}
+
+func (a *App) spinnakerAuditLogs() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		defer a.logRequest(r, start)
+		if err := verifyRequestor(a.c, r); err != nil {
+			a.log.Error("failed to authenticate", "error", err)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+		var event spinnaker.Root
+		data, err := io.ReadAll(r.Body)
+		if err != nil {
+			a.log.Error("failed to read request body", "error", err)
+			http.Error(w, "failed to read request body", http.StatusBadRequest)
+			return
+		}
+		if err = json.Unmarshal(data, &event); err != nil {
+			a.log.Error("failed to parse event", "error", err)
+			http.Error(w, "failed to parse event", http.StatusBadRequest)
+			return
+		} else {
+			for _, s := range a.sinks {
+				s.WriteEvent(event)
+			}
+		}
+	}
+}
+
+func verifyRequestor(cfg config.Config, r *http.Request) error {
+	auth := r.Header.Get("authorization")
+
+	basicAuth, err := base64.StdEncoding.DecodeString(strings.ReplaceAll(auth, "Basic ", ""))
+	if err != nil {
+		return err
+	}
+	parts := strings.Split(string(basicAuth), ":")
+	if parts[0] != cfg.UserName || parts[1] != cfg.PassWord {
+		return fmt.Errorf("username, password mismatch")
+	}
+	return nil
+}

@@ -1,0 +1,68 @@
+{
+  "eventName": "pipeline:triggered",
+  "payload": {
+    "content": {
+      "execution": {
+        "application": "sample-app",
+        "authentication": {
+          "allowedAccounts": null,
+          "user": "alice@example.com"
+        },
+        "buildTime": 1620000000000,
+        "canceled": false,
+        "endTime": 1620000005000,
+        "id": "exec-001",
+        "initialConfig": null,
+        "keepWaitingPipelines": false,
+        "limitConcurrent": false,
+        "maxConcurrentExecutions": 1,
+        "name": "SamplePipeline",
+        "notifications": null,
+        "origin": "manual",
+        "pipelineConfigId": "config-abc123",
+        "spelEvaluator": "v4",
+        "stages": null,
+        "startTime": 1620000001000,
+        "status": "SUCCEEDED",
+        "systemNotifications": null,
+        "trigger": {
+          "artifacts": null,
+          "dryRun": false,
+          "notifications": null,
+          "other": {
+            "artifacts": null,
+            "dryRun": false,
+            "enabled": false,
+            "eventId": "evt-001",
+            "executionId": "exec-001",
+            "expectedArtifacts": null,
+            "notifications": null,
+            "parameters": null,
+            "preferred": false,
+            "rebake": false,
+            "resolvedExpectedArtifacts": null,
+            "strategy": false,
+            "type": "manual",
+            "user": null
+          },
+          "parameters": null,
+          "rebake": false,
+          "resolvedExpectedArtifacts": null,
+          "strategy": false,
+          "type": "manual",
+          "user": null
+        },
+        "executionId": "exec-001"
+      }
+    },
+    "details": {
+      "application": "sample-app",
+      "created": 1620000000000,
+      "requestHeaders": null,
+      "source": "echo-rest",
+      "type": "orca:pipeline:starting",
+      "eventId": "evt-001"
+    }
+  }
+}
+

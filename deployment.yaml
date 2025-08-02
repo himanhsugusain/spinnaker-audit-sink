@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spinnaker-audit-sink
+  namespace: spinnaker
+  labels:
+    app: spinnaker-audit-sink
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spinnaker-audit-sink
+  template:
+    metadata:
+      labels:
+        app: spinnaker-audit-sink
+    spec:
+      containers:
+        - name: spinnaker-audit-sink
+          image: spinnaker-audit-sink:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 9191
+          env:
+            - name: PORT 
+              value: "9191"
+            - name: USERNAME
+              value: "foo"
+            - name: PASSWORD
+              value: "bar"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spinnaker-audit-sink
+  namespace: spinnaker
+spec:
+  selector:
+    app: spinnaker-audit-sink
+  ports:
+    - port: 9191
+      targetPort: 9191
+  type: ClusterIP
