@@ -1,4 +1,4 @@
-BINARY_NAME=app
+BINARY_NAME=./bin/audit-sink
 DOCKER_IMAGE_NAME=spinnaker-audit-sink
 DOCKER_TAG=dev
 
