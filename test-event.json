@@ -1,68 +1,105 @@
 {
-  "eventName": "pipeline:triggered",
   "payload": {
+    "details": {
+      "source": "orca",
+      "type": "orca:task:starting",
+      "created": "1754227922729",
+      "application": "test-application",
+      "requestHeaders": {}
+    },
     "content": {
+      "standalone": false,
+      "canceled": false,
+      "context": {
+        "waitTime": 3
+      },
+      "startTime": 1754227922675,
+      "executionId": "01K1R23NMDHN94QCBV374XXXMN",
+      "stageId": "01K1R23NN9AH327Z60FH46GANT",
+      "isSynthetic": false,
+      "name": "Wait",
+      "taskName": "wait.wait",
       "execution": {
-        "application": "sample-app",
-        "authentication": {
-          "allowedAccounts": null,
-          "user": "alice@example.com"
-        },
-        "buildTime": 1620000000000,
+        "type": "PIPELINE",
+        "id": "01K1R23NMDHN94QCBV374XXXMN",
+        "application": "test-application",
+        "name": "test",
+        "buildTime": 1754227922601,
         "canceled": false,
-        "endTime": 1620000005000,
-        "id": "exec-001",
-        "initialConfig": null,
+        "limitConcurrent": true,
+        "maxConcurrentExecutions": 0,
         "keepWaitingPipelines": false,
-        "limitConcurrent": false,
-        "maxConcurrentExecutions": 1,
-        "name": "SamplePipeline",
-        "notifications": null,
-        "origin": "manual",
-        "pipelineConfigId": "config-abc123",
-        "spelEvaluator": "v4",
-        "stages": null,
-        "startTime": 1620000001000,
-        "status": "SUCCEEDED",
-        "systemNotifications": null,
-        "trigger": {
-          "artifacts": null,
-          "dryRun": false,
-          "notifications": null,
-          "other": {
-            "artifacts": null,
-            "dryRun": false,
-            "enabled": false,
-            "eventId": "evt-001",
-            "executionId": "exec-001",
-            "expectedArtifacts": null,
-            "notifications": null,
-            "parameters": null,
-            "preferred": false,
-            "rebake": false,
-            "resolvedExpectedArtifacts": null,
-            "strategy": false,
-            "type": "manual",
-            "user": null
-          },
-          "parameters": null,
-          "rebake": false,
-          "resolvedExpectedArtifacts": null,
-          "strategy": false,
-          "type": "manual",
-          "user": null
+        "stages": [
+          {
+            "id": "01K1R23NN9AH327Z60FH46GANT",
+            "refId": "1",
+            "type": "wait",
+            "name": "Wait",
+            "startTime": 1754227922675,
+            "status": "RUNNING",
+            "context": {
+              "waitTime": 3
+            },
+            "outputs": {},
+            "tasks": [
+              {
+                "id": "1",
+                "implementingClass": "com.netflix.spinnaker.orca.pipeline.tasks.WaitTask",
+                "name": "wait",
+                "startTime": 1754227922726,
+                "status": "RUNNING",
+                "stageStart": true,
+                "stageEnd": true,
+                "loopStart": false,
+                "loopEnd": false,
+                "taskExceptionDetails": {}
+              }
+            ],
+            "requisiteStageRefIds": []
+          }
+        ],
+        "startTime": 1754227922623,
+        "status": "RUNNING",
+        "authentication": {
+          "user": "anonymous",
+          "allowedAccounts": []
         },
-        "executionId": "exec-001"
+        "origin": "api",
+        "trigger": {
+          "type": "manual",
+          "user": "[anonymous]",
+          "parameters": {},
+          "artifacts": [],
+          "notifications": [],
+          "other": {
+            "type": "manual",
+            "user": "[anonymous]",
+            "parameters": {},
+            "artifacts": [],
+            "notifications": [],
+            "rebake": false,
+            "dryRun": false,
+            "strategy": false,
+            "resolvedExpectedArtifacts": [],
+            "expectedArtifacts": [],
+            "eventId": "4b76ab03-8c88-4e1c-8be8-21bf1ab92fc1",
+            "enabled": false,
+            "executionId": "01K1R23NMDHN94QCBV374XXXMN",
+            "preferred": false
+          },
+          "resolvedExpectedArtifacts": [],
+          "dryRun": false,
+          "rebake": false,
+          "strategy": false
+        },
+        "pipelineConfigId": "35ef4ab6-8542-47c6-a044-9a4f8e8a6e11",
+        "notifications": [],
+        "initialConfig": {},
+        "systemNotifications": [],
+        "spelEvaluator": "v4"
       }
     },
-    "details": {
-      "application": "sample-app",
-      "created": 1620000000000,
-      "requestHeaders": null,
-      "source": "echo-rest",
-      "type": "orca:pipeline:starting",
-      "eventId": "evt-001"
-    }
-  }
+    "eventId": "75a1eed8-c7f0-4a69-b699-ff47da8fd9b1"
+  },
+  "eventName": "spinnaker_events"
 }
-

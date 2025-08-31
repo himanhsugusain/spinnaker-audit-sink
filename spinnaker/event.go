@@ -56,7 +56,7 @@ type Stage struct {
 	ID                   string         `json:"id"`
 	Name                 string         `json:"name"`
 	Outputs              map[string]any `json:"outputs"`
-	RefID                int            `json:"refId"`
+	RefID                string         `json:"refId"`
 	RequisiteStageRefIDs []any          `json:"requisiteStageRefIds"`
 	StartTime            float64        `json:"startTime"`
 	Status               string         `json:"status"`
@@ -90,7 +90,7 @@ type Trigger struct {
 	ResolvedExpectedArtifacts []any          `json:"resolvedExpectedArtifacts"`
 	Strategy                  bool           `json:"strategy"`
 	Type                      string         `json:"type"`
-	User                      []string       `json:"user"`
+	User                      string         `json:"user"`
 }
 
 // OtherTrigger contains additional trigger details
@@ -108,13 +108,13 @@ type OtherTrigger struct {
 	ResolvedExpectedArtifacts []any          `json:"resolvedExpectedArtifacts"`
 	Strategy                  bool           `json:"strategy"`
 	Type                      string         `json:"type"`
-	User                      []string       `json:"user"`
+	User                      string       	 `json:"user"`
 }
 
 // Details contains metadata about the event
 type Details struct {
 	Application    string         `json:"application"`
-	Created        int64          `json:"created"`
+	Created        string         `json:"created"`
 	RequestHeaders map[string]any `json:"requestHeaders"`
 	Source         string         `json:"source"`
 	Type           string         `json:"type"`

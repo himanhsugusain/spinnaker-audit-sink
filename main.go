@@ -17,7 +17,11 @@ import (
 )
 
 func main() {
-	app := NewApp()
+	log := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level:     slog.LevelDebug,
+		AddSource: true,
+	}))
+	app := NewApp(log)
 	panic(app.Run())
 }
 
@@ -28,17 +32,14 @@ type App struct {
 	sinks []sinks.Sink
 }
 
-func NewApp() *App {
+func NewApp(l *slog.Logger) *App {
 	mux := http.DefaultServeMux
 	return &App{
-		c: config.GetConfig(),
-		log: slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-			Level:     slog.LevelDebug,
-			AddSource: true,
-		})),
+		c:   config.GetConfig(),
 		mux: mux,
+		log: l,
 		sinks: []sinks.Sink{
-			&sinks.LogSink{},
+			sinks.NewLogSink(l),
 		},
 	}
 
