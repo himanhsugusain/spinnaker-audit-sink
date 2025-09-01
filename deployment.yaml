@@ -8,6 +8,8 @@ data:
     port: 9191
     username: foo
     password: bar
+    sinks:
+      - logger
     filter:
       detailstype:
        - "orca:pipeline:"

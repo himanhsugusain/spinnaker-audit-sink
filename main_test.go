@@ -34,7 +34,7 @@ func TestEchoHandler(t *testing.T) {
 		},
 		log: ll,
 		sinks: []sinks.Sink{
-			sinks.NewLogSink(ll),
+			sinks.NewLogSink(),
 		},
 	}
 	handler := http.HandlerFunc(app.spinnakerAuditLogs())

@@ -13,6 +13,7 @@ type Config struct {
 	PassWord string
 	Port     string
 	Filter   Filter
+	Sinks    []string
 }
 
 func GetConfig() (Config, error) {

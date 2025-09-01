@@ -41,12 +41,10 @@ func NewApp(l *slog.Logger) *App {
 		l.Debug("config", "app.yaml", cfg)
 	}
 	return &App{
-		c:   cfg,
-		mux: mux,
-		log: l,
-		sinks: []sinks.Sink{
-			sinks.NewLogSink(),
-		},
+		c:     cfg,
+		mux:   mux,
+		log:   l,
+		sinks: sinks.GetSinks(cfg.Sinks),
 	}
 
 }
