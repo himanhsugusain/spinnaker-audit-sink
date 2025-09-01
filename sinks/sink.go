@@ -57,6 +57,7 @@ func (l *LogSink) WriteEvent(r spinnaker.Root) {
 		"pipeline", map[string]string{
 			"name":             r.Payload.Content.Execution.Name,
 			"pipelineConfigId": r.Payload.Content.Execution.PipelineConfigID,
+			"application":      r.Payload.Details.Application,
 		},
 		"status", r.Payload.Content.Execution.Status,
 		"execution", map[string]any{
