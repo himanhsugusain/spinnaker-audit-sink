@@ -2,19 +2,21 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config-v1 
-  namespace: monitoring
-immutable: true               # immutable for safety and performance
+  namespace: spinnaker
 data:
   app.yaml: |
     port: 9191
     username: foo
     password: bar
+    filter:
+      detailstype:
+       - "orca:pipeline:"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spinnaker-audit-sink
-  namespace: monitoring
+  namespace: spinnaker
   labels:
     app: spinnaker-audit-sink
 spec:
@@ -46,7 +48,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spinnaker-audit-sink
-  namespace: monitoring
+  namespace: spinnaker
 spec:
   selector:
     app: spinnaker-audit-sink

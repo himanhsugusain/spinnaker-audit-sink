@@ -5,10 +5,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+type Filter struct {
+	DetailsType []string
+}
 type Config struct {
 	UserName string
 	PassWord string
 	Port     string
+	Filter   Filter
 }
 
 func GetConfig() (Config, error) {

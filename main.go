@@ -18,7 +18,7 @@ import (
 
 func main() {
 	log := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level:     slog.LevelDebug,
+		Level:     slog.LevelInfo,
 		AddSource: true,
 	}))
 	app := NewApp(log)
@@ -37,13 +37,15 @@ func NewApp(l *slog.Logger) *App {
 	cfg, err := config.GetConfig()
 	if err != nil {
 		l.Error("error reading config", "err", err.Error())
+	} else {
+		l.Debug("config", "app.yaml", cfg)
 	}
 	return &App{
 		c:   cfg,
 		mux: mux,
 		log: l,
 		sinks: []sinks.Sink{
-			sinks.NewLogSink(l),
+			sinks.NewLogSink(),
 		},
 	}
 
@@ -89,13 +91,28 @@ func (a *App) spinnakerAuditLogs() func(http.ResponseWriter, *http.Request) {
 			http.Error(w, "failed to parse event", http.StatusBadRequest)
 			return
 		} else {
-			for _, s := range a.sinks {
-				s.WriteEvent(event)
+			if a.FilterEvent(&event) {
+				for _, s := range a.sinks {
+					s.WriteEvent(event)
+				}
+			} else {
+				a.log.Debug("filtered out", "event", event.Payload.Details.Type)
 			}
 		}
 	}
 }
 
+func (a *App) FilterEvent(event *spinnaker.Root) bool {
+	keep := false
+	a.log.Debug("detailType filter", event.Payload.Details.Type, a.c.Filter.DetailsType)
+	for _, detailType := range a.c.Filter.DetailsType {
+		if strings.HasPrefix(event.Payload.Details.Type, detailType) {
+			keep = true
+			break
+		}
+	}
+	return keep
+}
 func verifyRequestor(cfg config.Config, r *http.Request) error {
 	auth := r.Header.Get("authorization")
 

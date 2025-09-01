@@ -1,1 +1,1 @@
-docker build -t spinnaker-audit-sink:latest . ; kind load docker-image spinnaker-audit-sink:latest --name spinnaker ; kubectl delete pod -n spinnaker $(kubectl get pod -n spinnaker | grep spinnaker-audit | awk '{print $1}')
+docker buildx build --platform linux/arm64 -t spinnaker-audit-sink:latest . ; kind load docker-image spinnaker-audit-sink:latest --name spinnaker ; kubectl delete pod -n spinnaker $(kubectl get pod -n spinnaker | grep spinnaker-audit | awk '{print $1}')
