@@ -22,7 +22,7 @@ func main() {
 		AddSource: true,
 	}))
 	app := NewApp(log)
-	panic(app.Run())
+	log.Error(app.Run().Error())
 }
 
 type App struct {
@@ -34,8 +34,12 @@ type App struct {
 
 func NewApp(l *slog.Logger) *App {
 	mux := http.DefaultServeMux
+	cfg, err := config.GetConfig()
+	if err != nil {
+		l.Error("error reading config", "err", err.Error())
+	}
 	return &App{
-		c:   config.GetConfig(),
+		c:   cfg,
 		mux: mux,
 		log: l,
 		sinks: []sinks.Sink{
@@ -48,6 +52,7 @@ func NewApp(l *slog.Logger) *App {
 func (a *App) Run() error {
 	a.mux.HandleFunc("/spinnakerAuditLogs/", a.spinnakerAuditLogs())
 	a.mux.HandleFunc("/", a.defaultHandlerFunc())
+	a.log.Info("starting server", "port", a.c.Port)
 	return http.ListenAndServe(fmt.Sprintf(":%s", a.c.Port), a.mux)
 }
 

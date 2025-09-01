@@ -108,7 +108,7 @@ type OtherTrigger struct {
 	ResolvedExpectedArtifacts []any          `json:"resolvedExpectedArtifacts"`
 	Strategy                  bool           `json:"strategy"`
 	Type                      string         `json:"type"`
-	User                      string       	 `json:"user"`
+	User                      string         `json:"user"`
 }
 
 // Details contains metadata about the event

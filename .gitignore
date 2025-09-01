@@ -42,3 +42,6 @@ ehthumbs.db
 *.tmp
 *.swp
 *~
+
+# Config
+*.yaml

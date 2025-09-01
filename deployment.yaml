@@ -1,8 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-v1 
+  namespace: monitoring
+immutable: true               # immutable for safety and performance
+data:
+  app.yaml: |
+    port: 9191
+    username: foo
+    password: bar
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spinnaker-audit-sink
-  namespace: spinnaker
+  namespace: monitoring
   labels:
     app: spinnaker-audit-sink
 spec:
@@ -21,19 +33,20 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 9191
-          env:
-            - name: PORT 
-              value: "9191"
-            - name: USERNAME
-              value: "foo"
-            - name: PASSWORD
-              value: "bar"
+          volumeMounts:
+            - name: app-config-volume
+              mountPath: /config/app.yaml
+              subPath: app.yaml
+      volumes:
+        - name: app-config-volume
+          configMap:
+            name: app-config-v1
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: spinnaker-audit-sink
-  namespace: spinnaker
+  namespace: monitoring
 spec:
   selector:
     app: spinnaker-audit-sink

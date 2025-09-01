@@ -2,7 +2,7 @@
 package config
 
 import (
-	"os"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -11,22 +11,20 @@ type Config struct {
 	Port     string
 }
 
-func GetConfig() Config {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+func GetConfig() (Config, error) {
+	cfg := Config{
+		UserName: "foo",
+		PassWord: "bar",
+		Port:     "8080",
 	}
-	userName := os.Getenv("USERNAME")
-	if userName == "" {
-		userName = "foo"
+	viper.SetConfigName("app")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("./config/")
+	if err := viper.ReadInConfig(); err != nil {
+		return cfg, err
 	}
-	passWord := os.Getenv("PASSWORD")
-	if passWord == "" {
-		passWord = "bar"
+	if err := viper.Unmarshal(&cfg); err != nil {
+		return cfg, err
 	}
-	return Config{
-		UserName: userName,
-		PassWord: passWord,
-		Port:     port,
-	}
+	return cfg, nil
 }

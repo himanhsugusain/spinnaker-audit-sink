@@ -20,7 +20,7 @@ build: vet fmt
 	@echo "Building the application..."
 	@go build -o $(BINARY_NAME) main.go
 
-run: build
+run: run
 	@echo "Running the application..."
 	@./$(BINARY_NAME)
 
